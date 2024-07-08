@@ -2,12 +2,16 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
+import { SWRConfig } from 'swr';
+
 import AuthButtons from '../components/auth/AuthButtons';
 
 const renderComponent = async () => {
   render(
     <MemoryRouter>
-      <AuthButtons />
+      <SWRConfig value={{ provider: ()=> new Map() }}>
+        <AuthButtons />
+      </SWRConfig>
     </MemoryRouter>
   );
 
@@ -95,5 +99,6 @@ describe('when user is sign in', () => {
     const signoutButton = screen.getByRole('link', { name: /sign out/i });
 
     expect(signoutButton).toBeInTheDocument();
+    expect(signoutButton).toHaveAttribute('href', '/signout');
   });
 });
